@@ -1,7 +1,14 @@
 #include <cstdio>
 #include "Bigint.h"
 
-static inline bool get_msb(int32_t x)
+static inline size_t max(size_t x, size_t y)
+{
+	return x > y ? x : y;
+}
+
+
+
+static inline bool get_msb(uint32_t x)
 {
 	return (x & 0x80000000) != 0;
 }
@@ -23,11 +30,11 @@ void Bigint::normalize()
 	}
 }
 
-int32_t Bigint::get(size_t index) const
+uint32_t Bigint::get(size_t index) const
 {
 	if (index >= this->data.size())
 	{
-		return this->is_negative() * -1;
+		return this->is_negative() * 0xFFFFFFFF;
 	}
 	else
 	{
@@ -35,7 +42,7 @@ int32_t Bigint::get(size_t index) const
 	}
 }
 
-void Bigint::set(size_t index, int32_t value)
+void Bigint::set(size_t index, uint32_t value, bool normalize)
 {
 	// expand array, if necessary
 	if (index >= this->data.size())
@@ -44,19 +51,24 @@ void Bigint::set(size_t index, int32_t value)
 
 		for (size_t i = this->data.size(); i <= index; i++)
 		{
-			this->data.push_back(this->is_negative() * -1);
+			this->data.push_back(this->is_negative() * 0xFFFFFFFF);
 		}
 	}
 
 	this->data[index] = value;
-	this->normalize();
+
+	if (normalize)
+	{
+		this->normalize();
+	}
 }
+
 
 
 Bigint::Bigint() : Bigint(0)
 {}
 
-Bigint::Bigint(int32_t value)
+Bigint::Bigint(uint32_t value)
 {
 	if (value != 0)
 	{
@@ -88,14 +100,14 @@ void Bigint::negate()
 
 	for (size_t i = 0; i < this->data.size(); i++)
 	{
-		carry += static_cast<uint32_t>(~this->data[i]);
+		carry += ~this->data[i];
 		this->data[i] = static_cast<int32_t>(carry);
 		carry >>= 32;
 	}
 
 	if (this->is_negative() == sign)
 	{
-		this->data.push_back(!sign * -1);
+		this->data.push_back(!sign * 0xFFFFFFFF);
 	}
 
 	this->normalize();
@@ -106,4 +118,46 @@ Bigint Bigint::operator -() const
 	Bigint copy(*this);
 	copy.negate();
 	return std::move(copy); // TODO: ann freych ob des su ghet
+}
+
+// TODO: Performance verbessen, indem ma am Anfang mit ää ma in ganzen Speicher reserviert
+Bigint &Bigint::operator +=(Bigint const &x)
+{
+	size_t n = max(this->data.size(), x.data.size());
+	bool equal_sign = this->is_negative() == x.is_negative();
+	uint64_t sum = 0;
+
+	for (size_t i = 0; i < n; i++)
+	{
+		sum += static_cast<uint64_t>(this->get(i)) + x.get(i);
+		this->set(i, static_cast<uint32_t>(sum), false);
+		sum >>= 32;
+	}
+
+	if (equal_sign && (this->is_negative() != x.is_negative()))
+	{
+		this->data.push_back(x.is_negative() * 0xFFFFFFFF);
+	}
+
+	this->normalize(); // just to be sure
+	return *this;
+}
+
+Bigint &Bigint::operator -=(Bigint const &x)
+{
+	return *this += (-x);
+}
+
+Bigint Bigint::operator +(Bigint const &x) const
+{
+	Bigint copy(x);
+	copy += x;
+	return copy;
+}
+
+Bigint Bigint::operator -(Bigint const &x) const
+{
+	Bigint copy(x);
+	copy -= x;
+	return copy;
 }

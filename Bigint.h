@@ -8,20 +8,20 @@
 class Bigint
 {
 protected:
-	std::vector<int32_t> data;
+	std::vector<uint32_t> data;
 
 	void normalize();
 
-	int32_t get(size_t index) const;
+	uint32_t get(size_t index) const;
 
-	void set(size_t index, int32_t value);
+	void set(size_t index, uint32_t value, bool normalize = true);
 
 public:
 	Bigint();
 
-	Bigint(int32_t);
+	Bigint(uint32_t);
 
-	Bigint(Bigint const&);
+	Bigint(Bigint const &);
 
 	Bigint(Bigint &&);
 
@@ -30,8 +30,15 @@ public:
 	void negate();
 
 
-
 	Bigint operator -() const;
+
+	Bigint &operator +=(Bigint const &);
+
+	Bigint &operator -=(Bigint const &);
+
+	Bigint operator +(Bigint const &) const;
+
+	Bigint operator -(Bigint const &) const;
 };
 
 
