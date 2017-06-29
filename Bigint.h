@@ -27,9 +27,11 @@ public:
 
 	bool is_negative() const;
 
+	void negate();
 
 
-	Bigint &operator -() const;
+
+	Bigint operator -() const;
 };
 
 

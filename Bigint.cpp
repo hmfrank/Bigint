@@ -16,6 +16,10 @@ void Bigint::normalize()
 		{
 			this->data.pop_back();
 		}
+		else
+		{
+			break;
+		}
 	}
 }
 
@@ -49,9 +53,8 @@ void Bigint::set(size_t index, int32_t value)
 }
 
 
-
 Bigint::Bigint() : Bigint(0)
-{ }
+{}
 
 Bigint::Bigint(int32_t value)
 {
@@ -59,13 +62,6 @@ Bigint::Bigint(int32_t value)
 	{
 		this->data.push_back(value);
 	}
-}
-
-bool Bigint::is_negative() const
-{
-	size_t length = this->data.size();
-
-	return length ? get_msb(this->data[length - 1]) : false;
 }
 
 Bigint::Bigint(Bigint const &x)
@@ -78,16 +74,36 @@ Bigint::Bigint(Bigint &&x)
 	this->data = std::move(x.data);
 }
 
-Bigint &Bigint::operator -() const
+bool Bigint::is_negative() const
 {
-	Bigint copy (*this);
+	size_t length = this->data.size();
 
+	return length ? get_msb(this->data[length - 1]) : false;
+}
+
+void Bigint::negate()
+{
+	bool sign = this->is_negative();
 	uint64_t carry = 1;
 
 	for (size_t i = 0; i < this->data.size(); i++)
 	{
-		carry += static_cast<uint32_t>(~copy.data[i]);
-		copy.data[i] = static_cast<int32_t>(carry);
+		carry += static_cast<uint32_t>(~this->data[i]);
+		this->data[i] = static_cast<int32_t>(carry);
 		carry >>= 32;
 	}
+
+	if (this->is_negative() == sign)
+	{
+		this->data.push_back(!sign * -1);
+	}
+
+	this->normalize();
+}
+
+Bigint Bigint::operator -() const
+{
+	Bigint copy(*this);
+	copy.negate();
+	return std::move(copy); // TODO: ann freych ob des su ghet
 }
