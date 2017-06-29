@@ -21,6 +21,10 @@ public:
 
 	Bigint(int32_t);
 
+	Bigint(Bigint const&);
+
+	Bigint(Bigint &&);
+
 	bool is_negative() const;
 };
 

@@ -67,3 +67,13 @@ bool Bigint::is_negative() const
 
 	return length ? get_msb(this->data[length - 1]) : false;
 }
+
+Bigint::Bigint(Bigint const &x)
+{
+	this->data = x.data;
+}
+
+Bigint::Bigint(Bigint &&x)
+{
+	this->data = std::move(x.data);
+}
