@@ -77,3 +77,17 @@ Bigint::Bigint(Bigint &&x)
 {
 	this->data = std::move(x.data);
 }
+
+Bigint &Bigint::operator -() const
+{
+	Bigint copy (*this);
+
+	uint64_t carry = 1;
+
+	for (size_t i = 0; i < this->data.size(); i++)
+	{
+		carry += static_cast<uint32_t>(~copy.data[i]);
+		copy.data[i] = static_cast<int32_t>(carry);
+		carry >>= 32;
+	}
+}

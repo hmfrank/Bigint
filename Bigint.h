@@ -26,6 +26,10 @@ public:
 	Bigint(Bigint &&);
 
 	bool is_negative() const;
+
+
+
+	Bigint &operator -() const;
 };
 
 
