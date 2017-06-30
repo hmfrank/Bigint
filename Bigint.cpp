@@ -189,3 +189,28 @@ Bigint Bigint::operator -(Bigint const &x) const
 	copy -= x;
 	return copy;
 }
+
+bool Bigint::operator ==(Bigint const &x) const
+{
+	return this->data == x.data;
+}
+
+bool Bigint::operator <(Bigint const &x) const
+{
+	return this->compare_to(x) < 0;
+}
+
+bool Bigint::operator >(Bigint const &x) const
+{
+	return this->compare_to(x) > 0;
+}
+
+bool Bigint::operator <=(Bigint const &x) const
+{
+	return this->compare_to(x) <= 0;
+}
+
+bool Bigint::operator >=(Bigint const &x) const
+{
+	return this->compare_to(x) >= 0;
+}

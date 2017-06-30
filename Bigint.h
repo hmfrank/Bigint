@@ -41,6 +41,16 @@ public:
 	Bigint operator +(Bigint const &) const;
 
 	Bigint operator -(Bigint const &) const;
+
+	bool operator ==(Bigint const &) const;
+
+	bool operator <(Bigint const &) const;
+
+	bool operator >(Bigint const &) const;
+
+	bool operator <=(Bigint const &) const;
+
+	bool operator >=(Bigint const &) const;
 };
 
 
