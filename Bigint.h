@@ -29,6 +29,8 @@ public:
 
 	void negate();
 
+	int compare_to(Bigint const &) const;
+
 
 	Bigint operator -() const;
 

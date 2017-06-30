@@ -113,6 +113,34 @@ void Bigint::negate()
 	this->normalize();
 }
 
+int Bigint::compare_to(Bigint const &x) const
+{
+	bool sign_t = this->is_negative();
+	bool sign_x = x.is_negative();
+
+	if (sign_t != sign_x)
+	{
+		return sign_t ? -1 : 1;
+	}
+
+	for (size_t i = max(this->data.size(), x.data.size()); i--;)
+	{
+		uint32_t t_value = this->get(i);
+		uint32_t x_value = x.get(i);
+
+		if (t_value < x_value)
+		{
+			return -1;
+		}
+		else if (t_value > x_value)
+		{
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
 Bigint Bigint::operator -() const
 {
 	Bigint copy(*this);
