@@ -152,6 +152,7 @@ int Bigint::compare_to(Bigint const &x) const
 	return 0;
 }
 
+
 Bigint Bigint::operator -() const
 {
 	Bigint copy(*this);
@@ -206,7 +207,29 @@ Bigint &Bigint::operator >>=(int x)
 	if (x < 0)
 		return *this <<= -x;
 
+	size_t word_shift = static_cast<unsigned>(x) >> 5;
+	size_t bit_shift = static_cast<unsigned>(x) & 0x1F;
 
+	// shift words to the right
+	size_t n = this->data.size();
+	for (size_t i = word_shift; i <= n; i++)
+	{
+		int64_t word = this->get(i);
+		word <<= 32;
+		word >>= bit_shift;
+
+		this->set(i - word_shift, static_cast<uint32_t>(word >> 32), false);
+		if (i > word_shift)
+		{
+			this->set(i - word_shift - 1, static_cast<uint32_t>(word), false, ~(0xFFFFFFFF >> bit_shift));
+		}
+	}
+
+	// cut off the left part
+	this->data.resize(max(0, n - word_shift + 1));
+
+	this->normalize(); // just to be sure
+	return *this;
 }
 
 Bigint &Bigint::operator <<=(int x)
