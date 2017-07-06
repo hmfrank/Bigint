@@ -23,7 +23,7 @@ void Bigint::normalize()
 
 	for (size_t i = this->data.size(); i--;)
 	{
-		if (this->data[i] == sign * -1 && ((i ? get_msb(this->data[i - 1]) : false) == sign))
+		if (this->data[i] == sign * 0xFFFFFFFF && ((i ? get_msb(this->data[i - 1]) : false) == sign))
 		{
 			this->data.pop_back();
 		}
@@ -251,9 +251,9 @@ Bigint &Bigint::operator <<=(int x)
 	}
 
 	// put in new zeros at the right
-	for (size_t i = 0; i < x; i += 32)
+	for (size_t i = 0; i < static_cast<unsigned>(x); i += 32) // x is unsigned anyway, but the cast prevents compiler warnings (I hate compiler warnings!)
 	{
-		this->set(i >> 5, 0, false, ~(x - i >= 32 ? 0 : 0xFFFFFFFF << x - i));
+		this->set(i >> 5, 0, false, ~(x - i >= 32 ? 0 : 0xFFFFFFFF << (x - i)));
 	}
 
 	this->normalize(); // just to be sure
