@@ -6,6 +6,10 @@ static inline size_t max(size_t x, size_t y)
 	return x > y ? x : y;
 }
 
+static inline size_t min(size_t x, size_t y)
+{
+	return x < y ? x : y;
+}
 
 
 static inline bool get_msb(uint32_t x)
@@ -42,7 +46,7 @@ uint32_t Bigint::get(size_t index) const
 	}
 }
 
-void Bigint::set(size_t index, uint32_t value, bool normalize)
+void Bigint::set(size_t index, uint32_t value, bool normalize, uint32_t mask)
 {
 	// expand array, if necessary
 	if (index >= this->data.size())
@@ -55,14 +59,21 @@ void Bigint::set(size_t index, uint32_t value, bool normalize)
 		}
 	}
 
-	this->data[index] = value;
+	if (mask == 0xFFFFFFFF) // This if is there for performance reasons, but it's actually logically redundant.
+	{
+		this->data[index] = value;
+	}
+	else
+	{
+		this->data[index] &= ~mask;
+		this->data[index] |= value & mask;
+	}
 
 	if (normalize)
 	{
 		this->normalize();
 	}
 }
-
 
 
 Bigint::Bigint() : Bigint(0)
@@ -188,6 +199,42 @@ Bigint Bigint::operator -(Bigint const &x) const
 	Bigint copy(x);
 	copy -= x;
 	return copy;
+}
+
+Bigint &Bigint::operator >>=(int x)
+{
+	if (x < 0)
+		return *this <<= -x;
+
+
+}
+
+Bigint &Bigint::operator <<=(int x)
+{
+	if (x < 0)
+		return *this >>= -x;
+
+	size_t word_shift = static_cast<unsigned>(x) >> 5;
+	size_t bit_shift = static_cast<unsigned>(x) & 0x1F;
+
+	// shift words to the left
+	for (size_t i = this->data.size(); i--;)
+	{
+		uint64_t word = this->get(i);
+		word <<= bit_shift;
+
+		this->set(i + word_shift, static_cast<uint32_t>(word), false);
+		this->set(i + word_shift + 1, static_cast<uint32_t>(word >> 32), false, ~(0xFFFFFFFF << bit_shift));
+	}
+
+	// put in new zeros at the right
+	for (size_t i = 0; i < x; i += 32)
+	{
+		this->set(i >> 5, 0, false, ~(x - i >= 32 ? 0 : 0xFFFFFFFF << x - i));
+	}
+
+	this->normalize(); // just to be sure
+	return *this;
 }
 
 bool Bigint::operator ==(Bigint const &x) const

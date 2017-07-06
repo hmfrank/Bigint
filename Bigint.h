@@ -14,7 +14,7 @@ protected:
 
 	uint32_t get(size_t index) const;
 
-	void set(size_t index, uint32_t value, bool normalize = true);
+	void set(size_t index, uint32_t value, bool normalize = true, uint32_t mask = 0xFFFFFFFF);
 
 public:
 	Bigint();
@@ -41,6 +41,10 @@ public:
 	Bigint operator +(Bigint const &) const;
 
 	Bigint operator -(Bigint const &) const;
+
+	Bigint &operator >>=(int);
+
+	Bigint &operator <<=(int);
 
 	bool operator ==(Bigint const &) const;
 
