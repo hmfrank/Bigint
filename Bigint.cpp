@@ -160,13 +160,13 @@ Bigint Bigint::operator -() const
 	return std::move(copy); // TODO: ann freych ob des su ghet
 }
 
-// TODO: Performance verbessen, indem ma am Anfang mit ää ma in ganzen Speicher reserviert
 Bigint &Bigint::operator +=(Bigint const &x)
 {
 	size_t n = max(this->data.size(), x.data.size());
 	bool equal_sign = this->is_negative() == x.is_negative();
 	uint64_t sum = 0;
 
+	this->data.reserve(n);
 	for (size_t i = 0; i < n; i++)
 	{
 		sum += static_cast<uint64_t>(this->get(i)) + x.get(i);
