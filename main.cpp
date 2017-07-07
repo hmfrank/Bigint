@@ -1,6 +1,2 @@
-// TODO: write unit tests
-
-int main()
-{
-	return 0;
-}
+#define CATCH_CONFIG_MAIN
+#include "catch.hpp"

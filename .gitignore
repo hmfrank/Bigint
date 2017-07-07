@@ -1,4 +1,8 @@
-.idea
+.idea/
+CMakeLists.txt
+
 *.opp
 *.dpp
 unittest
+
+catch.hpp
