@@ -1,4 +1,3 @@
-#include <cstdio>
 #include "Bigint.h"
 
 static inline size_t max(size_t x, size_t y)
