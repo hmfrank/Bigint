@@ -190,14 +190,14 @@ Bigint &Bigint::operator -=(Bigint const &x)
 
 Bigint Bigint::operator +(Bigint const &x) const
 {
-	Bigint copy(x);
+	Bigint copy(*this);
 	copy += x;
 	return copy;
 }
 
 Bigint Bigint::operator -(Bigint const &x) const
 {
-	Bigint copy(x);
+	Bigint copy(*this);
 	copy -= x;
 	return copy;
 }
