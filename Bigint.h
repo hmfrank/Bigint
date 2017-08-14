@@ -25,6 +25,8 @@ public:
 
 	Bigint(Bigint &&);
 
+	std::vector<uint32_t> const &get_data();
+
 	bool is_negative() const;
 
 	void negate();

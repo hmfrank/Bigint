@@ -96,6 +96,11 @@ Bigint::Bigint(Bigint &&x)
 	this->data = std::move(x.data);
 }
 
+std::vector<uint32_t> const &Bigint::get_data()
+{
+	return this->data;
+}
+
 bool Bigint::is_negative() const
 {
 	size_t length = this->data.size();
