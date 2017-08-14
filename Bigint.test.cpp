@@ -37,3 +37,24 @@ TEST_CASE("Bigint Move Constructor", "Bigint::Bigint(Bigint &&)")
 	REQUIRE(j.get_data().size() == 1);
 	REQUIRE(j.get_data()[0] == 31);
 }
+
+TEST_CASE("Bigint is negative", "Bigint::is_negative()")
+{
+	Bigint i(0);
+	REQUIRE((k << 32))
+	Bigint j(5);
+	Bigint k(-5);
+	Bigint l(j);
+	Bigint m(k);
+
+	l <<= 32;
+	l += k;
+	m <<= 32;
+	m += j;
+
+	REQUIRE(!i.is_negative());
+	REQUIRE(!j.is_negative());
+	REQUIRE(k.is_negative());
+	REQUIRE(!l.is_negative());
+	REQUIRE(m.is_negative());
+}
