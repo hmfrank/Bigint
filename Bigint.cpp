@@ -120,7 +120,7 @@ void Bigint::negate()
 		carry >>= 32;
 	}
 
-	if (this->is_negative() == sign)
+	if (this->is_negative() == sign && this->data.size() > 0)
 	{
 		this->data.push_back(!sign * 0xFFFFFFFF);
 	}
@@ -250,8 +250,8 @@ Bigint &Bigint::operator <<=(int x)
 		uint64_t word = this->get(i);
 		word <<= bit_shift;
 
-		this->set(i + word_shift, static_cast<uint32_t>(word), false);
 		this->set(i + word_shift + 1, static_cast<uint32_t>(word >> 32), false, ~(0xFFFFFFFF << bit_shift));
+		this->set(i + word_shift, static_cast<uint32_t>(word), false);
 	}
 
 	// put in new zeros at the right

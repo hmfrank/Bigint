@@ -38,10 +38,12 @@ TEST_CASE("Bigint Move Constructor", "Bigint::Bigint(Bigint &&)")
 	REQUIRE(j.get_data()[0] == 31);
 }
 
+// TODO: test Bigint::operator <<=
+// TODO: test Bigint::operator +=
+
 TEST_CASE("Bigint is negative", "Bigint::is_negative()")
 {
 	Bigint i(0);
-	REQUIRE((k << 32))
 	Bigint j(5);
 	Bigint k(-5);
 	Bigint l(j);
@@ -57,4 +59,33 @@ TEST_CASE("Bigint is negative", "Bigint::is_negative()")
 	REQUIRE(k.is_negative());
 	REQUIRE(!l.is_negative());
 	REQUIRE(m.is_negative());
+}
+
+TEST_CASE("Bigint negation", "Bigint::negate()")
+{
+	Bigint i(0);
+	Bigint j(20);
+	Bigint k(1);
+
+	k <<= 31; // k = 2^31
+
+	i.negate();
+	REQUIRE(i.get_data().size() == 0);
+
+	j.negate();
+	REQUIRE(j.get_data().size() == 1);
+	REQUIRE(j.get_data()[0] == -20);
+
+	j.negate();
+	REQUIRE(j.get_data().size() == 1);
+	REQUIRE(j.get_data()[0] == 20);
+
+	k.negate();
+	REQUIRE(k.get_data().size() == 1);
+	REQUIRE(k.get_data()[0] == 2147483648);
+
+	k.negate();
+	REQUIRE(k.get_data().size() == 2);
+	REQUIRE(k.get_data()[0] == 2147483648);
+	REQUIRE(k.get_data()[1] == 0);
 }
