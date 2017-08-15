@@ -108,3 +108,15 @@ TEST_CASE("Bigint compare", "Bigint::compare_to(Bigint const &)")
 	REQUIRE(k.compare_to(j) < 0);
 	REQUIRE(k.compare_to(k) == 0);
 }
+
+TEST_CASE("Bigint unary minus", "Bigint::operator -()")
+{
+	Bigint i(9);
+	Bigint j = -i;
+
+	REQUIRE(i != j);
+
+	i.negate();
+
+	REQUIRE(i == j);
+}

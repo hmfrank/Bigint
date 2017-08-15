@@ -50,6 +50,8 @@ public:
 
 	bool operator ==(Bigint const &) const;
 
+	bool operator !=(Bigint const &) const;
+
 	bool operator <(Bigint const &) const;
 
 	bool operator >(Bigint const &) const;

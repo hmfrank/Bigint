@@ -269,6 +269,11 @@ bool Bigint::operator ==(Bigint const &x) const
 	return this->data == x.data;
 }
 
+bool Bigint::operator !=(Bigint const &x) const
+{
+	return !(*this == x);
+}
+
 bool Bigint::operator <(Bigint const &x) const
 {
 	return this->compare_to(x) < 0;
