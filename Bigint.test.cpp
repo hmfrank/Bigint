@@ -9,7 +9,7 @@ TEST_CASE("Bigint Default Constructor", "Bigint::Bigint()")
 	REQUIRE(i.get_data().size() == 0);
 }
 
-TEST_CASE("Bigint uint32_t Constructor", "Bigint::Bigint(uint32_t)")
+TEST_CASE("Bigint::Bigint(uint32_t)")
 {
 	Bigint i(0);
 	Bigint j(187);
@@ -39,9 +39,62 @@ TEST_CASE("Bigint Move Constructor", "Bigint::Bigint(Bigint &&)")
 }
 
 // TODO: test Bigint::operator <<=
-// TODO: test Bigint::operator +=
 
-TEST_CASE("Bigint is negative", "Bigint::is_negative()")
+TEST_CASE("Bigint::operator+=(Bigint const &)")
+{
+	Bigint i(12);
+	Bigint j(3456);
+	Bigint k(-78);
+	Bigint l(-9012);
+	Bigint m(2000000000);
+	Bigint n(-2000000000);
+
+
+	j <<= 32;
+	l <<= 32;
+
+	j += i;
+	REQUIRE(j.get_data().size() == 2);
+	REQUIRE(j.get_data()[0] == 12);
+	REQUIRE(j.get_data()[1] == 3456);
+
+	j += k;
+	REQUIRE(j.get_data().size() == 2);
+	REQUIRE(j.get_data()[0] == 4294967230);
+	REQUIRE(j.get_data()[1] == 3455);
+
+	j += l;
+	REQUIRE(j.get_data().size() == 2);
+	REQUIRE(j.get_data()[0] == 4294967230);
+	REQUIRE(j.get_data()[1] == -5557);
+
+	j += l;
+	REQUIRE(j.get_data().size() == 2);
+	REQUIRE(j.get_data()[0] == 4294967230);
+	REQUIRE(j.get_data()[1] == -14569);
+
+	m += m;
+	REQUIRE(m.get_data().size() == 2);
+	REQUIRE(m.get_data()[0] == 4000000000);
+	REQUIRE(m.get_data()[1] == 0);
+
+	m += n;
+	REQUIRE(m.get_data().size() == 1);
+	REQUIRE(m.get_data()[0] == 2000000000);
+
+	m += Bigint(2000000000);
+	m += Bigint(2000000000);
+	REQUIRE(m.get_data().size() == 2);
+	REQUIRE(m.get_data()[0] == 1705032704);
+	REQUIRE(m.get_data()[1] == 1);
+
+	n += m;
+	REQUIRE(n.get_data().size() == 2);
+	REQUIRE(n.get_data()[0] == 4000000000);
+	REQUIRE(n.get_data()[1] == 0);
+}
+
+TEST_CASE("Bigint::is_negative()")
 {
 	Bigint i(0);
 	Bigint j(5);
@@ -61,7 +114,7 @@ TEST_CASE("Bigint is negative", "Bigint::is_negative()")
 	REQUIRE(m.is_negative());
 }
 
-TEST_CASE("Bigint negation", "Bigint::negate()")
+TEST_CASE("Bigint::negate()")
 {
 	Bigint i(0);
 	Bigint j(20);
@@ -90,7 +143,7 @@ TEST_CASE("Bigint negation", "Bigint::negate()")
 	REQUIRE(k.get_data()[1] == 0);
 }
 
-TEST_CASE("Bigint compare", "Bigint::compare_to(Bigint const &)")
+TEST_CASE("Bigint::compare_to(Bigint const &)")
 {
 	Bigint i(0);
 	Bigint j(42);
@@ -109,7 +162,7 @@ TEST_CASE("Bigint compare", "Bigint::compare_to(Bigint const &)")
 	REQUIRE(k.compare_to(k) == 0);
 }
 
-TEST_CASE("Bigint unary minus", "Bigint::operator -()")
+TEST_CASE("Bigint::operator -()")
 {
 	Bigint i(9);
 	Bigint j = -i;

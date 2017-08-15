@@ -167,7 +167,8 @@ Bigint Bigint::operator -() const
 Bigint &Bigint::operator +=(Bigint const &x)
 {
 	size_t n = max(this->data.size(), x.data.size());
-	bool equal_sign = this->is_negative() == x.is_negative();
+	bool t_sign = this->is_negative();
+	bool equal_sign = t_sign == x.is_negative();
 	uint64_t sum = 0;
 
 	this->data.reserve(n);
@@ -178,9 +179,9 @@ Bigint &Bigint::operator +=(Bigint const &x)
 		sum >>= 32;
 	}
 
-	if (equal_sign && (this->is_negative() != x.is_negative()))
+	if (equal_sign && (this->is_negative() != t_sign))
 	{
-		this->data.push_back(x.is_negative() * 0xFFFFFFFF);
+		this->data.push_back(t_sign * 0xFFFFFFFF);
 	}
 
 	this->normalize(); // just to be sure
