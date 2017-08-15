@@ -89,3 +89,22 @@ TEST_CASE("Bigint negation", "Bigint::negate()")
 	REQUIRE(k.get_data()[0] == 2147483648);
 	REQUIRE(k.get_data()[1] == 0);
 }
+
+TEST_CASE("Bigint compare", "Bigint::compare_to(Bigint const &)")
+{
+	Bigint i(0);
+	Bigint j(42);
+	Bigint k(-37);
+
+	k <<= 32;
+
+	REQUIRE(i.compare_to(i) == 0);
+	REQUIRE(i.compare_to(j) < 0);
+	REQUIRE(i.compare_to(k) > 0);
+	REQUIRE(j.compare_to(i) > 0);
+	REQUIRE(j.compare_to(j) == 0);
+	REQUIRE(j.compare_to(k) > 0);
+	REQUIRE(k.compare_to(i) < 0);
+	REQUIRE(k.compare_to(j) < 0);
+	REQUIRE(k.compare_to(k) == 0);
+}
