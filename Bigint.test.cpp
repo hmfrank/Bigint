@@ -19,6 +19,9 @@ TEST_CASE("Bigint::Bigint(uint32_t)")
 	REQUIRE(j.get_data()[0] == 187);
 }
 
+// NOT TESTED: Bigint::operator ==(Bigint const &)
+// NOT TESTED: Bigint::operator !=(Bigint const &)
+
 TEST_CASE("Bigint Copy Constructor", "Bigint::Bigint(Bigint const &)")
 {
 	Bigint i(420);
@@ -40,7 +43,38 @@ TEST_CASE("Bigint Move Constructor", "Bigint::Bigint(Bigint &&)")
 
 // TODO: test Bigint::operator <<=
 
-TEST_CASE("Bigint::operator+=(Bigint const &)")
+TEST_CASE("Bigint::operator >>=(int)")
+{
+	Bigint i(12);
+	Bigint j(12);
+	Bigint k(1);
+	Bigint l(-30);
+	Bigint m(-8);
+
+	i >>= 0;
+	REQUIRE(i == j);
+
+	i >>= 3;
+	REQUIRE(i == k);
+
+	l >>= 2;
+	REQUIRE(l == m);
+
+	k <<= 64;
+	k >>= 33;
+	REQUIRE(k.get_data().size() == 2);
+	REQUIRE(k.get_data()[0] == 2147483648);
+	REQUIRE(k.get_data()[1] == 0);
+
+	k >>= 1;
+	REQUIRE(k.get_data().size() == 1);
+	REQUIRE(k.get_data()[0] == 1073741824);
+
+	k >>= 31;
+	REQUIRE(k.get_data().size() == 0);
+}
+
+TEST_CASE("Bigint::operator +=(Bigint const &)")
 {
 	Bigint i(12);
 	Bigint j(3456);
@@ -173,3 +207,7 @@ TEST_CASE("Bigint::operator -()")
 
 	REQUIRE(i == j);
 }
+
+// NOT TESTED: Bigint::operator -=(Bigint const &)
+// NOT TESTED: Bigint::operator +(Bigint const &)
+// NOT TESTED: Bigint::operator -(Bigint const &)
