@@ -51,26 +51,26 @@ TEST_CASE("Bigint::operator >>=(int)")
 	Bigint l(-30);
 	Bigint m(-8);
 
-	i >>= 0;
+	REQUIRE(&(i >>= 0) == &i);
 	REQUIRE(i == j);
 
-	i >>= 3;
+	REQUIRE(&(i >>= 3) == &i);
 	REQUIRE(i == k);
 
-	l >>= 2;
+	REQUIRE(&(l >>= 2) == &l);
 	REQUIRE(l == m);
 
 	k <<= 64;
-	k >>= 33;
+	REQUIRE(&(k >>= 33) == &k);
 	REQUIRE(k.get_data().size() == 2);
 	REQUIRE(k.get_data()[0] == 2147483648);
 	REQUIRE(k.get_data()[1] == 0);
 
-	k >>= 1;
+	REQUIRE(&(k >>= 1) == &k);
 	REQUIRE(k.get_data().size() == 1);
 	REQUIRE(k.get_data()[0] == 1073741824);
 
-	k >>= 31;
+	REQUIRE(&(k >>= 31) == &k);
 	REQUIRE(k.get_data().size() == 0);
 }
 
@@ -87,42 +87,42 @@ TEST_CASE("Bigint::operator +=(Bigint const &)")
 	j <<= 32;
 	l <<= 32;
 
-	j += i;
+	REQUIRE(&(j += i) == &j);
 	REQUIRE(j.get_data().size() == 2);
 	REQUIRE(j.get_data()[0] == 12);
 	REQUIRE(j.get_data()[1] == 3456);
 
-	j += k;
+	REQUIRE(&(j += k) == &j);
 	REQUIRE(j.get_data().size() == 2);
 	REQUIRE(j.get_data()[0] == 4294967230);
 	REQUIRE(j.get_data()[1] == 3455);
 
-	j += l;
+	REQUIRE(&(j += l) == &j);
 	REQUIRE(j.get_data().size() == 2);
 	REQUIRE(j.get_data()[0] == 4294967230);
 	REQUIRE(j.get_data()[1] == -5557);
 
-	j += l;
+	REQUIRE(&(j += l) == &j);
 	REQUIRE(j.get_data().size() == 2);
 	REQUIRE(j.get_data()[0] == 4294967230);
 	REQUIRE(j.get_data()[1] == -14569);
 
-	m += m;
+	REQUIRE(&(m += m) == &m);
 	REQUIRE(m.get_data().size() == 2);
 	REQUIRE(m.get_data()[0] == 4000000000);
 	REQUIRE(m.get_data()[1] == 0);
 
-	m += n;
+	REQUIRE(&(m += n) == &m);
 	REQUIRE(m.get_data().size() == 1);
 	REQUIRE(m.get_data()[0] == 2000000000);
 
-	m += Bigint(2000000000);
-	m += Bigint(2000000000);
+	REQUIRE(&(m += Bigint(2000000000)) == &m);
+	REQUIRE(&(m += Bigint(2000000000)) == &m);
 	REQUIRE(m.get_data().size() == 2);
 	REQUIRE(m.get_data()[0] == 1705032704);
 	REQUIRE(m.get_data()[1] == 1);
 
-	n += m;
+	REQUIRE(&(n += m) == &n);
 	REQUIRE(n.get_data().size() == 2);
 	REQUIRE(n.get_data()[0] == 4000000000);
 	REQUIRE(n.get_data()[1] == 0);
